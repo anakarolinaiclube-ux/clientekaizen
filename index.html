@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal do Cliente | Kaizen Solutions</title>
     
-    <!-- Fontes (Idênticas ao Simulador) -->
+    <!-- Fontes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -13,7 +13,6 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Configurações Tailwind (Sincronizadas com o Simulador) -->
     <script>
         tailwind.config = {
             theme: {
@@ -38,17 +37,36 @@
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
         .fade-in { animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .pipeline-dot-active { box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); }
+
+        .ship-path {
+            stroke-dasharray: 8;
+            animation: dash 30s linear infinite;
+        }
+        @keyframes dash { to { stroke-dashoffset: -200; } }
+
+        .radar-pulse::after {
+            content: '';
+            position: absolute;
+            width: 20px; height: 20px;
+            top: -7px; left: -7px;
+            background: rgba(37, 99, 235, 0.4);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(3); opacity: 0; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased">
 
     <div class="flex min-h-screen">
         
-        <!-- SIDEBAR (Identidade Kaizen) -->
+        <!-- SIDEBAR -->
         <aside class="w-64 bg-brand-900 text-white flex-shrink-0 hidden md:flex flex-col">
             <div class="p-6">
                 <div class="flex items-center gap-2 text-white mb-8">
@@ -69,7 +87,6 @@
                     <a href="#" class="flex items-center gap-3 text-brand-100 hover:bg-brand-800 px-4 py-3 rounded-lg text-sm font-medium transition">
                         <span>📍</span> Rastreamento
                     </a>
-
                     <p class="text-xs font-semibold text-brand-500 uppercase tracking-wider mt-8 mb-4">Financeiro</p>
                     <a href="#" class="flex items-center gap-3 text-brand-100 hover:bg-brand-800 px-4 py-3 rounded-lg text-sm font-medium transition">
                         <span>🧾</span> Pagamentos
@@ -79,12 +96,9 @@
                     </a>
                 </nav>
             </div>
-
             <div class="mt-auto p-6 border-t border-brand-800">
-                <div class="bg-brand-800/50 p-4 rounded-xl border border-white/10">
-                    <p class="text-xs text-brand-400">Cliente</p>
-                    <p class="text-sm font-semibold truncate">Metalúrgica Souza & Cia</p>
-                    <p class="text-[10px] text-brand-500 mt-1 uppercase tracking-tighter">ID: CLI-4892</p>
+                <div class="bg-brand-800/50 p-4 rounded-xl border border-white/10 text-xs text-brand-100 italic">
+                    Logado como: <strong>Metalúrgica Souza</strong>
                 </div>
             </div>
         </aside>
@@ -93,150 +107,47 @@
         <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
             
             <!-- HEADER -->
-            <header class="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-8 z-10">
+            <header class="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-8 z-10 shrink-0">
                 <div>
-                    <h1 class="text-lg font-bold text-slate-800">Portal do Cliente</h1>
+                    <h1 class="text-lg font-bold text-slate-800 tracking-tight">Painel de Controle de Importação</h1>
                 </div>
-                <div class="flex items-center gap-4">
-                    <button class="text-sm font-medium text-slate-500 hover:text-brand-600 transition flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                        Exportar Relatório
-                    </button>
-                    <div class="h-8 w-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-xs">
-                        MS
+                <div class="flex items-center gap-4 font-mono text-[11px]">
+                    <div class="bg-slate-50 border border-slate-200 px-4 py-1.5 rounded-full flex gap-3 italic">
+                        <span class="text-slate-500">PTAX VENDA:</span>
+                        <span class="text-brand-600 font-bold">R$ 5.1420</span>
                     </div>
                 </div>
             </header>
 
-            <!-- DASHBOARD BODY -->
-            <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+            <!-- ÁREA DE SCROLL -->
+            <div class="flex-1 overflow-y-auto p-8 custom-scrollbar space-y-8">
                 
-                <!-- KPIs (Mesmo estilo dos cards do simulador) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 fade-in">
+                <!-- KPIs -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 fade-in">
                     <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-brand-500">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Em Trânsito</p>
-                        <p class="text-3xl font-bold text-slate-800 mt-2">03</p>
-                        <p class="text-xs text-brand-600 font-medium mt-1">2 chegam este mês</p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Em Trânsito</p>
+                        <p class="text-2xl font-bold text-slate-800 mt-1">03</p>
                     </div>
                     <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-amber-400">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Em Produção</p>
-                        <p class="text-3xl font-bold text-slate-800 mt-2">02</p>
-                        <p class="text-xs text-amber-600 font-medium mt-1">Próxima ETD: 18/Abr</p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Em Produção</p>
+                        <p class="text-2xl font-bold text-slate-800 mt-1">02</p>
                     </div>
                     <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-emerald-500">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Prontos</p>
-                        <p class="text-3xl font-bold text-slate-800 mt-2">01</p>
-                        <p class="text-xs text-emerald-600 font-medium mt-1">Aguardando Booking</p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Desembaraçados</p>
+                        <p class="text-2xl font-bold text-slate-800 mt-1">12</p>
                     </div>
                     <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-slate-800">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">A Pagar (30d)</p>
-                        <p class="text-3xl font-bold text-slate-800 mt-2">R$ 84k</p>
-                        <p class="text-xs text-slate-500 font-medium mt-1">3 vencimentos próximos</p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Custos Mês</p>
+                        <p class="text-2xl font-bold text-slate-800 mt-1">R$ 142k</p>
                     </div>
                 </div>
 
-                <!-- SEÇÃO CENTRAL -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 fade-in">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                     
-                    <!-- Lista de Pedidos (Estilo Tabela Kaizen) -->
-                    <div class="lg:col-span-2 space-y-6">
-                        <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
-                            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                                <h3 class="font-bold text-slate-800">Pedidos Ativos</h3>
-                                <button class="text-xs font-bold text-brand-600 hover:underline">VER TODOS</button>
-                            </div>
-                            <div class="divide-y divide-slate-100">
-                                <!-- Pedido 1 -->
-                                <div class="p-5 hover:bg-brand-50/30 transition cursor-pointer flex items-center border-l-4 border-brand-500 bg-brand-50/20">
-                                    <div class="flex-1">
-                                        <div class="flex items-center gap-2 mb-1">
-                                            <span class="text-xs font-bold text-brand-700 bg-brand-100 px-2 py-0.5 rounded">#IMP-2024-041</span>
-                                            <span class="text-[10px] font-bold py-0.5 px-2 rounded-full bg-blue-100 text-blue-700 uppercase">Em Trânsito</span>
-                                        </div>
-                                        <h4 class="text-sm font-semibold text-slate-800">Válvulas Industriais — 12 ctn</h4>
-                                        <p class="text-xs text-slate-500">China → Santos | Navio: COSCO SHIPPING TAURUS</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-sm font-bold text-brand-600">12 Abr</p>
-                                        <p class="text-[10px] text-slate-400 font-bold uppercase">ETA Santos</p>
-                                    </div>
-                                </div>
-                                <!-- Pedido 2 -->
-                                <div class="p-5 hover:bg-slate-50 transition cursor-pointer flex items-center border-l-4 border-transparent">
-                                    <div class="flex-1">
-                                        <div class="flex items-center gap-2 mb-1">
-                                            <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">#IMP-2024-035</span>
-                                            <span class="text-[10px] font-bold py-0.5 px-2 rounded-full bg-amber-100 text-amber-700 uppercase">Produção</span>
-                                        </div>
-                                        <h4 class="text-sm font-semibold text-slate-800">Componentes Elétricos — 45 ctn</h4>
-                                        <p class="text-xs text-slate-500">Taiwan → Santos | ETD: 18 de Abril</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-sm font-bold text-slate-400">18 Abr</p>
-                                        <p class="text-[10px] text-slate-400 font-bold uppercase">ETD Prevista</p>
-                                    </div>
-                                </div>
-                                <!-- Pedido 3 -->
-                                <div class="p-5 hover:bg-slate-50 transition cursor-pointer flex items-center border-l-4 border-transparent">
-                                    <div class="flex-1">
-                                        <div class="flex items-center gap-2 mb-1">
-                                            <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">#IMP-2024-029</span>
-                                            <span class="text-[10px] font-bold py-0.5 px-2 rounded-full bg-emerald-100 text-emerald-700 uppercase">Chegou</span>
-                                        </div>
-                                        <h4 class="text-sm font-semibold text-slate-800">Mancais de Rolete — 60 un</h4>
-                                        <p class="text-xs text-slate-500">Santos | Despacho aduaneiro em andamento</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-sm font-bold text-emerald-600">No Porto</p>
-                                        <p class="text-[10px] text-slate-400 font-bold uppercase">Status</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Financeiro -->
-                        <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
-                            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                                <h3 class="font-bold text-slate-800 flex items-center gap-2">
-                                    <span class="p-1.5 bg-slate-100 rounded text-lg">💳</span> Agenda Financeira
-                                </h3>
-                            </div>
-                            <div class="p-0">
-                                <table class="min-w-full text-sm">
-                                    <thead class="bg-slate-50 text-slate-500 text-[10px] font-bold uppercase tracking-widest">
-                                        <tr>
-                                            <th class="px-6 py-3 text-left font-semibold">Descrição</th>
-                                            <th class="px-6 py-3 text-left font-semibold">Valor</th>
-                                            <th class="px-6 py-3 text-left font-semibold">Vencimento</th>
-                                            <th class="px-6 py-3 text-right font-semibold">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-slate-100">
-                                        <tr>
-                                            <td class="px-6 py-4">
-                                                <p class="font-medium text-slate-700">Invoice Jiangsu Valve</p>
-                                                <p class="text-[10px] text-slate-400">REF #IMP-2024-041</p>
-                                            </td>
-                                            <td class="px-6 py-4 font-bold text-slate-700">USD 18.400,00</td>
-                                            <td class="px-6 py-4 text-amber-600 font-semibold">Em 3 dias</td>
-                                            <td class="px-6 py-4 text-right"><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-[10px] font-bold uppercase">Pendente</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="px-6 py-4">
-                                                <p class="font-medium text-slate-700">Impostos (DI)</p>
-                                                <p class="text-[10px] text-slate-400">REF #IMP-2024-029</p>
-                                            </td>
-                                            <td class="px-6 py-4 font-bold text-slate-700">R$ 31.200,00</td>
-                                            <td class="px-6 py-4 text-slate-500">02/Abr</td>
-                                            <td class="px-6 py-4 text-right"><span class="bg-emerald-50 text-emerald-600 px-2 py-1 rounded text-[10px] font-bold uppercase">Pago</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                                            <!-- LIVE VESSEL TRACKING -->
+                    <!-- COLUNA DA ESQUERDA (ESTACADA) -->
+                    <div class="lg:col-span-2 space-y-8 fade-in">
+                        
+                        <!-- 1. LIVE VESSEL TRACKING -->
                         <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
                             <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                                 <div class="flex items-center gap-3">
@@ -268,100 +179,133 @@
                             </div>
                         </div>
 
-                    <!-- COLUNA DIREITA (Tracking & Support) -->
-                    <div class="space-y-6">
+                        <!-- 2. PEDIDOS ATIVOS (Conforme imagem) -->
+                        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+                            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                                <h3 class="font-bold text-slate-800 text-base">Pedidos Ativos</h3>
+                                <button class="text-[11px] font-bold text-brand-600 hover:underline uppercase tracking-widest">Ver Todos</button>
+                            </div>
+                            <div class="divide-y divide-slate-100">
+                                <!-- Item 1 -->
+                                <div class="p-6 hover:bg-slate-50/50 transition flex items-center border-l-4 border-brand-500">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="text-[10px] font-bold text-brand-700 bg-brand-50 px-3 py-1 rounded">#IMP-2024-041</span>
+                                            <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded uppercase">Em Trânsito</span>
+                                        </div>
+                                        <h4 class="text-base font-bold text-slate-800">Válvulas Industriais — 12 ctn</h4>
+                                        <p class="text-xs text-slate-500 mt-1 font-medium">China → Santos | Navio: COSCO SHIPPING TAURUS</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-lg font-bold text-brand-600">12 Abr</p>
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">ETA Santos</p>
+                                    </div>
+                                </div>
+                                <!-- Item 2 -->
+                                <div class="p-6 hover:bg-slate-50/50 transition flex items-center border-l-4 border-transparent">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded">#IMP-2024-035</span>
+                                            <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded uppercase">Produção</span>
+                                        </div>
+                                        <h4 class="text-base font-bold text-slate-800">Componentes Elétricos — 45 ctn</h4>
+                                        <p class="text-xs text-slate-500 mt-1 font-medium">Taiwan → Santos | ETD: 18 de Abril</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-lg font-bold text-slate-400">18 Abr</p>
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">ETD Prevista</p>
+                                    </div>
+                                </div>
+                                <!-- Item 3 -->
+                                <div class="p-6 hover:bg-slate-50/50 transition flex items-center border-l-4 border-transparent">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded">#IMP-2024-029</span>
+                                            <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded uppercase">Chegou</span>
+                                        </div>
+                                        <h4 class="text-base font-bold text-slate-800">Mancais de Rolete — 60 un</h4>
+                                        <p class="text-xs text-slate-500 mt-1 font-medium">Santos | Despacho aduaneiro em andamento</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-lg font-bold text-emerald-600">No Porto</p>
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Status</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. AGENDA FINANCEIRA (Conforme imagem) -->
+                        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+                            <div class="p-6 border-b border-slate-100 flex items-center gap-3">
+                                <div class="bg-slate-50 p-2 rounded-lg border border-slate-100 italic">💳</div>
+                                <h3 class="font-bold text-slate-800 text-base">Agenda Financeira</h3>
+                            </div>
+                            <div class="overflow-x-auto p-6">
+                                <table class="w-full text-left">
+                                    <thead class="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50">
+                                        <tr>
+                                            <th class="pb-4 px-2">Descrição</th>
+                                            <th class="pb-4 px-2">Valor</th>
+                                            <th class="pb-4 px-2 text-center">Vencimento</th>
+                                            <th class="pb-4 px-2 text-right">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-50 text-sm">
+                                        <tr class="hover:bg-slate-50/50 transition">
+                                            <td class="py-5 px-2">
+                                                <p class="font-bold text-slate-700">Invoice Jiangsu Valve</p>
+                                                <p class="text-[10px] text-slate-400 uppercase font-medium">REF #IMP-2024-041</p>
+                                            </td>
+                                            <td class="py-5 px-2 font-bold text-slate-800">USD 18.400,00</td>
+                                            <td class="py-5 px-2 text-center font-bold text-amber-600 italic">Em 3 dias</td>
+                                            <td class="py-5 px-2 text-right">
+                                                <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded uppercase border border-amber-100/50">Pendente</span>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-50/50 transition">
+                                            <td class="py-5 px-2">
+                                                <p class="font-bold text-slate-700">Impostos (DI)</p>
+                                                <p class="text-[10px] text-slate-400 uppercase font-medium">REF #IMP-2024-029</p>
+                                            </td>
+                                            <td class="py-5 px-2 font-bold text-slate-800">R$ 31.200,00</td>
+                                            <td class="py-5 px-2 text-center font-bold text-slate-400 italic">02/Abr</td>
+                                            <td class="py-5 px-2 text-right">
+                                                <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded uppercase border border-emerald-100/50">Pago</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- SIDEBAR DIREITA (Mantendo a seção de apoio) -->
+                    <div class="space-y-8 fade-in">
                         
-                        <!-- Pipeline Progress -->
-                        <div class="bg-white rounded-xl shadow-md border border-slate-200 p-6">
-                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Status do Pedido #041</h3>
-                            
-                            <div class="space-y-6 relative">
-                                <!-- Linha vertical do pipeline -->
-                                <div class="absolute left-3 top-2 bottom-2 w-0.5 bg-slate-100"></div>
-                                
-                                <div class="flex items-start gap-4 relative">
-                                    <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[10px] z-10">✓</div>
-                                    <div>
-                                        <p class="text-xs font-bold text-slate-700">Pedido Colocado</p>
-                                        <p class="text-[10px] text-slate-400">Finalizado em 10/Mar</p>
-                                    </div>
-                                </div>
-
-                                <div class="flex items-start gap-4 relative">
-                                    <div class="w-6 h-6 rounded-full bg-brand-600 flex items-center justify-center text-white text-[10px] z-10 pipeline-dot-active animate-pulse">🚢</div>
-                                    <div>
-                                        <p class="text-xs font-bold text-brand-600">Em Alto Mar</p>
-                                        <p class="text-[10px] text-slate-500 font-medium">Navio em trânsito (Xangai → Santos)</p>
-                                    </div>
-                                </div>
-
-                                <div class="flex items-start gap-4 relative">
-                                    <div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-white text-[10px] z-10">⚓</div>
-                                    <div>
-                                        <p class="text-xs font-bold text-slate-400">Porto de Santos</p>
-                                        <p class="text-[10px] text-slate-400 italic">Previsão: 12/Abr</p>
-                                    </div>
-                                </div>
+                        <!-- ANALISTA -->
+                        <div class="bg-brand-900 rounded-2xl p-6 text-white relative overflow-hidden shadow-xl">
+                            <div class="absolute -right-6 -top-6 text-white/5 text-8xl italic font-serif">K</div>
+                            <h3 class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-6">Sua Analista Kaizen</h3>
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-12 h-12 rounded-full border-2 border-brand-500 flex items-center justify-center bg-white text-2xl overflow-hidden shadow-inner shadow-brand-900/50">👩‍💼</div>
+                                <div><p class="font-bold text-sm">Ana Karolina</p><p class="text-[9px] text-brand-400 uppercase font-medium">Comex Sênior</p></div>
                             </div>
-
-                            <div class="mt-8 pt-6 border-t border-slate-100">
-                                <div class="bg-brand-50 p-4 rounded-lg">
-                                    <p class="text-[10px] text-brand-600 font-bold uppercase mb-2">Detalhes do Navio</p>
-                                    <p class="text-xs font-medium text-slate-700 leading-relaxed">
-                                        <span class="block text-slate-500">MMSI: 235102649</span>
-                                        <span class="block text-slate-500">Container: CSNU7341258</span>
-                                    </p>
-                                </div>
-                            </div>
+                            <p class="text-[11px] text-brand-100 italic font-light leading-relaxed mb-6 border-l-2 border-brand-500 pl-4">"Olá! A liberação da DI 029 foi concluída com sucesso. O transporte rodoviário já está agendado!"</p>
+                            <button class="w-full bg-brand-500 hover:bg-brand-400 text-white font-bold py-3 rounded-xl text-xs transition shadow-lg shadow-brand-950">MENSAGEM RÁPIDA</button>
                         </div>
 
-                        <!-- Analista / Suporte -->
-                        <div class="bg-brand-900 rounded-xl shadow-lg p-6 text-white overflow-hidden relative">
-                            <div class="absolute -right-4 -top-4 opacity-10">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                                </svg>
-                            </div>
-                            
-                            <h3 class="text-xs font-bold text-brand-400 uppercase tracking-widest mb-4">Suporte Especializado</h3>
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="h-12 w-12 rounded-full border-2 border-brand-500 p-0.5">
-                                    <div class="h-full w-full rounded-full bg-slate-200 flex items-center justify-center text-xl overflow-hidden">
-                                        👩‍💼
-                                    </div>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-bold">Ana Karolina</p>
-                                    <p class="text-[10px] text-brand-400 uppercase">Analista de Comex Sênior</p>
-                                </div>
-                            </div>
-                            
-                            <p class="text-xs text-brand-100 italic leading-relaxed border-l-2 border-brand-500 pl-3 mb-6">
-                                "Olá! A LI do pedido 041 deve ser liberada ainda hoje. Fico te avisando!"
-                            </p>
-                            
-                            <button class="w-full bg-white text-brand-900 py-3 rounded-lg text-xs font-bold hover:bg-brand-50 transition shadow-lg">
-                                ENVIAR MENSAGEM
-                            </button>
-                        </div>
-
-                        <!-- Documentos (Pequena Lista) -->
-                        <div class="bg-white rounded-xl shadow-md border border-slate-200 p-6">
-                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Documentos Recentes</h3>
+                        <!-- DOCUMENTOS -->
+                        <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6">
+                            <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Pasta de Documentos</h3>
                             <div class="space-y-3">
-                                <div class="flex items-center justify-between p-2 hover:bg-slate-50 rounded-lg transition border border-transparent hover:border-slate-100">
-                                    <div class="flex items-center gap-3">
-                                        <span class="text-lg text-brand-600">📄</span>
-                                        <span class="text-xs font-medium text-slate-700">Commercial Invoice</span>
-                                    </div>
-                                    <span class="text-emerald-500 text-[10px] font-bold">PDF</span>
+                                <div class="p-3 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-between group cursor-pointer hover:border-brand-300 transition">
+                                    <div class="flex items-center gap-3"><span class="text-lg">📄</span><span class="text-[11px] font-bold text-slate-600 uppercase">Commercial Invoice</span></div>
+                                    <span class="text-[9px] font-bold text-brand-500 opacity-0 group-hover:opacity-100 transition">BAIXAR</span>
                                 </div>
-                                <div class="flex items-center justify-between p-2 hover:bg-slate-50 rounded-lg transition border border-transparent hover:border-slate-100">
-                                    <div class="flex items-center gap-3">
-                                        <span class="text-lg text-brand-600">📄</span>
-                                        <span class="text-xs font-medium text-slate-700">Bill of Lading</span>
-                                    </div>
-                                    <span class="text-emerald-500 text-[10px] font-bold">PDF</span>
+                                <div class="p-3 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-between group cursor-pointer hover:border-brand-300 transition">
+                                    <div class="flex items-center gap-3"><span class="text-lg">⚓</span><span class="text-[11px] font-bold text-slate-600 uppercase">Bill of Lading</span></div>
+                                    <span class="text-[9px] font-bold text-brand-500 opacity-0 group-hover:opacity-100 transition">BAIXAR</span>
                                 </div>
                             </div>
                         </div>
@@ -370,13 +314,10 @@
                 </div>
             </div>
 
-            <!-- FOOTER -->
-            <footer class="bg-white border-t border-slate-200 p-4 px-8 flex justify-between items-center text-[10px] text-slate-400 font-medium">
-                <p>© 2025 Kaizen Solutions - Software de Gestão Comex</p>
-                <div class="flex gap-4 uppercase tracking-widest">
-                    <a href="#" class="hover:text-brand-600">Ajuda</a>
-                    <a href="#" class="hover:text-brand-600">Privacidade</a>
-                </div>
+            <!-- RODAPÉ HUD -->
+            <footer class="h-10 shrink-0 bg-white border-t border-slate-200 flex items-center justify-between px-8 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                <span>© 2025 Kaizen Solutions | Dashboard V1.2</span>
+                <span class="flex items-center gap-2 italic"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Servidores Online</span>
             </footer>
         </main>
     </div>
